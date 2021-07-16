@@ -18,7 +18,7 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-  <title>About - bAyxinma</title>
+  <title>Synchronized(2)-轻量级锁 - bAyxinma</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
@@ -34,6 +34,8 @@
     
   
 
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
   
 
 
@@ -62,7 +64,7 @@
 
 
 <body>
-  <header style="height: 60vh;">
+  <header style="height: 70vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -156,14 +158,51 @@
 </nav>
 
     <div class="banner" id="banner" parallax=true
-         style="background: url('/img/bk2.jpg') no-repeat center center;
+         style="background: url('/img/bk.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="About">
+            <span class="h2" id="subtitle" title="Synchronized(2)-轻量级锁">
               
             </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-03-08 22:09" pubdate>
+        March 8, 2021 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      853 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      8
+       分钟
+    </span>
+  
+
+  
+  
+</div>
 
             
           </div>
@@ -176,78 +215,133 @@
 
   <main>
     
-      <div class="container nopadding-x-md">
-        <div class="py-5" id="board"
-          >
-          
-            <div class="about-avatar">
-              <img src="/img/favicon.png" srcset="/img/loading.gif" lazyload
-                   class="img-fluid" alt="avatar">
-            </div>
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
+      
 
-<div class="text-center">
-  <div class="about-info">
-    <div class="about-name">bAyxinma</div>
-    <div class="about-intro">世界上 ，没有一拳解决不了的事，如果有，那就两拳
-——– ONE PUNCH-MAN
-</div>
-    <div class="about-icons">
-      
-        
-        
-        
-        <a href=https://github.com class="
-           hint--bottom hint--rounded"
-           aria-label=GitHub
-           target="_blank"
-        >
-          <i class="iconfont icon-github-fill" aria-hidden="true"></i>
-          
-        </a>
-      
-        
-        
-        
-        <a  class="qr-trigger
-           "
-           
-           target="_self"
-        >
-          <i class="iconfont icon-wechat-fill" aria-hidden="true"></i>
-          
-            <img class="qr-img" src="/img/wechat.jpg" srcset="/img/loading.gif" lazyload alt="qrcode" />
-          
-        </a>
-      
-    </div>
-  </div>
-</div>
-
-<article class="about-content page-content mt-5">
-  <div class="markdown-body">
-    <h4 id="个人信息"><a href="#个人信息" class="headerlink" title="个人信息"></a>个人信息</h4><ul>
-<li>2022年 | Java工程师</li>
-<li>Email：<a href="mailto:&#x68;&#105;&#113;&#x69;&#110;&#103;&#x79;&#117;&#x40;&#49;&#54;&#x33;&#46;&#99;&#x6f;&#x6d;">&#x68;&#105;&#113;&#x69;&#110;&#103;&#x79;&#117;&#x40;&#49;&#54;&#x33;&#46;&#99;&#x6f;&#x6d;</a></li>
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Synchronized(2)-轻量级锁</h1>
+            
+            <div class="markdown-body">
+              <h3 id="轻量级锁加-解锁"><a href="#轻量级锁加-解锁" class="headerlink" title="轻量级锁加/解锁"></a>轻量级锁加/解锁</h3><ul>
+<li><h4 id="轻量级锁加锁"><a href="#轻量级锁加锁" class="headerlink" title="轻量级锁加锁"></a>轻量级锁加锁</h4><ul>
+<li><p>线程在执行同步块之前，JVM会先在当前<strong>线程的栈桢中</strong>创建用于存储锁记录的空间（<strong>Lock Record</strong>）。将对象头中的Mark Word复制到锁记录中，官方称为<strong>Displaced Mark Word</strong>；并将Object reference字段指向锁对象。</p>
+<div align=center>
+    <img src="/img/juc/3.png" srcset="/img/loading.gif" lazyload style="zoom:75%;" />
+</div></li>
+<li><p>然后线程尝试使用CAS将对象头中的<strong>Mark Word</strong>替换为指向锁记录的指针。如果成功，当前线程获得锁，如果失败，表示其他线程竞争锁，当前线程便尝试使用<strong>自旋</strong>来获取锁。</p>
+<ul>
+<li><p>如果<strong>更新成功</strong>，该线程就拥有了该对象的锁，并且将对象Mark Word的锁标志位设置为“00”，即表示此对象处于轻量级锁定状态</p>
+<div align=center>
+    <img src="/img/juc/4.png" srcset="/img/loading.gif" lazyload style="zoom:75%;" />
+</div></li>
+<li><p>如果<strong>更新失败</strong>，首先检查对象的Mark Word是否指向当前线程的栈帧，如果是则代表是这是一次<strong>锁重入</strong>，则向当前线程的栈帧中添加一条Displaced Mark Word为null，Object reference字段指向锁对象的Lock Record，用来<strong>统计重入的次数</strong>。</p>
+<div align=center>
+    <img src="/img/juc/5.png" srcset="/img/loading.gif" lazyload style="zoom:50%;" />
+</div></li>
 </ul>
-<h2 id="“"><a href="#“" class="headerlink" title="“"></a>“</h2><p>感谢您关注我的网站</p>
-<p>本站仅用于学习的记录与分享</p>
-<p>欢迎交流讨论~</p>
+</li>
+<li><p>如果<strong>更新失败</strong>，且对象的Mark Word<strong>不指向当前线程的栈帧</strong>。说明存在多个线程竞争锁，当前线程便尝试使用<strong>自旋</strong>来获取锁。如果自旋获取锁失败，那么轻量级锁就要<strong>膨胀为重量级锁</strong>，将对象头Mark Word中的锁标志状态值（最后两位）修改“10”，并将其指向重量级锁（互斥量）的指针，后面等待锁的线程也要进入阻塞状态。</p>
+</li>
+</ul>
+</li>
+<li><h4 id="轻量级锁解锁"><a href="#轻量级锁解锁" class="headerlink" title="轻量级锁解锁"></a>轻量级锁解锁</h4><ul>
+<li>遍历线程栈，找到所有Object reference字段等于当前锁对象的Lock Record；</li>
+<li>如果Lock Record的Displaced Mark Word<strong>为null</strong>，代表这是一次<strong>重入</strong>，将obj设置为null即可；</li>
+<li>轻量级解锁时，会使用<strong>CAS操作</strong>将对象头的MarkWord恢复成<strong>之前的MarkWord</strong>（Displaced Mark Word），如果成功，则表示没有竞争发生。如果失败，表示当前锁存在竞争，锁就会膨胀成重量级锁。</li>
+</ul>
+<p>因为自旋会消耗CPU，为了避免无用的自旋（比如获得锁的线程被阻塞住了），一旦锁升级成重量级锁，就不会再恢复到轻量级锁状态。当锁处于这个状态下，其他线程试图获取锁时，都会被阻塞住，当持有锁的线程释放锁之后会唤醒这些线程，被唤醒的线程就会进行新一轮的夺锁之争。</p>
+</li>
+</ul>
+<h3 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h3><blockquote>
+<p>内核态与用户态的切换上不容易优化，但通过<strong>自旋锁</strong>可以<strong>减少</strong>线程阻塞造成的<strong>线程切换</strong>。对于锁的竞争不激烈且占用锁时间非常短的情况，因为自旋的消耗会小于线程阻塞挂起再唤醒的操作的消耗，减少线程阻塞造成的线程切换，可以得到较大的性能提升</p>
+</blockquote>
+<ul>
+<li><p>流程：</p>
+<ul>
+<li>当前线程竞争锁失败时，会<strong>自旋</strong>（空等待，比如一个空的有限for循环）一会；</li>
+<li>在自旋的同时重新竞争锁；</li>
+<li>如果自旋结束前获得了锁，那么锁获取成功；否则，自旋结束后阻塞自己。</li>
+</ul>
+</li>
+<li><p>缺点：</p>
+<p>如果锁竞争的时间比较长（竞争激烈的情况下），那么自旋通常不能获得锁，白白浪费了自旋占用的CPU时间。</p>
+</li>
+</ul>
 
-  </div>
-
-  
-</article>
-
-              </div>
             </div>
-          </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/JUC/">JUC</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">并发编程</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/03/08/Synchronized(1)-%E5%81%8F%E5%90%91%E9%94%81/">
+                        <span class="hidden-mobile">Synchronized(1)-偏向锁</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
         </div>
       </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
     
 
     
@@ -327,7 +421,11 @@
 
 
 
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
 
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
 
 
 
