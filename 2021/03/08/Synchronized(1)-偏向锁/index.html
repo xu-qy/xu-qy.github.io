@@ -313,8 +313,6 @@
 </div></li>
 </ul>
 </li>
-</ul>
-<ul>
 <li><p><strong>偏向锁参数设置</strong></p>
 <blockquote>
 <p>偏向锁在Java 6和Java 7里是默认启用的，但是它在应用程序启动几秒钟之后才激活，如有必要可以使用JVM参数来关闭延迟：-XX:BiasedLockingStartupDelay=0。如果你确定应用程序里所有的锁通常情况下处于竞争状态，可以通过JVM参数<strong>关闭偏向锁</strong>：-XX:-UseBiasedLocking=false，那么程序默认会进入轻量级锁状态。</p>
