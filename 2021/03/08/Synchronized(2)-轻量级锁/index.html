@@ -232,13 +232,13 @@
 <li><h4 id="轻量级锁加锁"><a href="#轻量级锁加锁" class="headerlink" title="轻量级锁加锁"></a>轻量级锁加锁</h4><ul>
 <li><p>线程在执行同步块之前，JVM会先在当前<strong>线程的栈桢中</strong>创建用于存储锁记录的空间（<strong>Lock Record</strong>）。将对象头中的Mark Word复制到锁记录中，官方称为<strong>Displaced Mark Word</strong>；并将Object reference字段指向锁对象。</p>
 <div align=center>
-    <img src="/img/juc/3.png" srcset="/img/loading.gif" lazyload style="zoom:75%;" />
+    <img src="/img/juc/3.png" srcset="/img/loading.gif" lazyload style="zoom:50%;" />
 </div></li>
 <li><p>然后线程尝试使用CAS将对象头中的<strong>Mark Word</strong>替换为指向锁记录的指针。如果成功，当前线程获得锁，如果失败，表示其他线程竞争锁，当前线程便尝试使用<strong>自旋</strong>来获取锁。</p>
 <ul>
 <li><p>如果<strong>更新成功</strong>，该线程就拥有了该对象的锁，并且将对象Mark Word的锁标志位设置为“00”，即表示此对象处于轻量级锁定状态</p>
 <div align=center>
-    <img src="/img/juc/4.png" srcset="/img/loading.gif" lazyload style="zoom:75%;" />
+    <img src="/img/juc/4.png" srcset="/img/loading.gif" lazyload style="zoom:50%;" />
 </div></li>
 <li><p>如果<strong>更新失败</strong>，首先检查对象的Mark Word是否指向当前线程的栈帧，如果是则代表是这是一次<strong>锁重入</strong>，则向当前线程的栈帧中添加一条Displaced Mark Word为null，Object reference字段指向锁对象的Lock Record，用来<strong>统计重入的次数</strong>。</p>
 <div align=center>
